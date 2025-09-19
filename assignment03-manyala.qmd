@@ -25,8 +25,8 @@ execute:
 
 # Import Dataset
 
-```{python}
 
+```{python}
 from pyspark.sql import SparkSession
 import pandas as pd
 import plotly.express as px
@@ -49,3 +49,8 @@ df = (
 df.show(5)
 
 ```
+
+# Salary Distribution by Industry and Employment Type
+
+```{python}
+
