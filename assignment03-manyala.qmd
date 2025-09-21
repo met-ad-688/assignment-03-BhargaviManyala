@@ -130,54 +130,51 @@ companies.head(4)
 
 ## Industries Table
 
-*I referred Claude Sonnet 4 which is included in the AI Prompt file.
-
-`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`NAICS2_NAME`
+`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`
 
 ```{python}
-
 from pyspark.sql.functions import monotonically_increasing_id
 
 industries_df = (
     df.select(
-        "NAICS2_NAME",
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME"
-        
+        "SOC_5_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_NAME",
+        "LOT_OCCUPATION_GROUP"
     )
     .distinct()
     .withColumn("INDUSTRY_ID", monotonically_increasing_id())
     .select(
         "INDUSTRY_ID",
-        "NAICS2_NAME",
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME"
-        
+        "SOC_5_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_NAME",
+        "LOT_OCCUPATION_GROUP"
     )
     .orderBy("INDUSTRY_ID")
 )
-
 
 industries_df.createOrReplaceTempView("industries")
 
 industries = industries_df.toPandas()
 industries.head()
+
 ```
 
 ## Job Postings Table
 
-*I referred Claude Sonnet 4 which is included in the AI Prompt file.
+`ID (Primary Key)`, `TITLE_CLEAN`, `COMPANY_ID (FK to companies)`, `INDUSTRY_ID (FKto industries)`, `EMPLOYMENT_TYPE_NAME`, `REMOTE_TYPE_NAME`, `BODY`,`MIN_YEARS_EXPERIENCE`, `MAX_YEARS_EXPERIENCE`, `SALARY`, `SALARY_FROM`,`SALARY_TO`, `LOCATION_ID (FK to locations)`, `POSTED`, `EXPIRED`, `DURATION`
 
-`ID (Primary Key)`,  `COMPANY_ID (FK to companies)`, `INDUSTRY_ID (FKto industries)`, `EMPLOYMENT_TYPE_NAME`, `REMOTE_TYPE_NAME`, ,`MIN_YEARS_EXPERIENCE`, `MAX_YEARS_EXPERIENCE`, `SALARY`, `SALARY_FROM`,`SALARY_TO`, `LOCATION_ID (FK to locations)`, `POSTED`, `EXPIRED`, `DURATION`,`ONET_NAME`,`EDUCATION_LEVELS_NAME`,`LOT_V6_SPECIALIZED_OCCUPATION_NAME`
 
 ```{python}
-
 job_postings_df = df.select(
     "ID",
+    "TITLE_CLEAN",
+    "BODY",
     "COMPANY",            
     "EMPLOYMENT_TYPE_NAME",
     "REMOTE_TYPE_NAME",
@@ -190,12 +187,8 @@ job_postings_df = df.select(
     "NAICS_2022_6",       
     "POSTED",
     "EXPIRED",
-    "DURATION",
-    "ONET_NAME",
-"EDUCATION_LEVELS_NAME",
-"LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+    "DURATION"
 ).withColumnRenamed("ID", "JOB_ID").orderBy("JOB_ID")
-
  
 ```
 
@@ -226,11 +219,58 @@ job_postings_df = job_postings_df.drop("COMPANY", "LAT-LONG")
 job_postings_df.createOrReplaceTempView("job_postings")
 
 job_postings_df.show(truncate=10)
-
 ```
 
+## 
+```{python}
+from pyspark.sql.functions import col
 
+# Step 1: Casting salary and experience columns
+df = df.withColumn("SALARY", col("SALARY").cast("float")) \
+       .withColumn("SALARY_FROM", col("SALARY_FROM").cast("float")) \
+       .withColumn("SALARY_TO", col("SALARY_TO").cast("float")) \
+       .withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast("float")) \
+       .withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast("float"))
 
+# Step 2: Computing medians for salary columns
+def compute_median(sdf, col_name):
+    q = sdf.approxQuantile(col_name, [0.5], 0.01)
+    return q[0] if q else None
 
+median_from = compute_median(df, "SALARY_FROM")
+median_to   = compute_median(df, "SALARY_TO")
+median_salary = compute_median(df, "SALARY")
 
+print("Medians:", median_from, median_to, median_salary)
 
+# Step 3: Imputing missing salaries, but not experience
+df = df.fillna({
+    "SALARY_FROM": median_from,
+    "SALARY_TO": median_to,
+    "SALARY": median_salary
+})
+
+# Step 4: Computing average salary
+df = df.withColumn(
+    "Average_Salary", (col("SALARY_FROM") + col("SALARY_TO")) / 2
+)
+
+# Step 5: Selecting required columns
+export_cols = [
+    "EDUCATION_LEVELS_NAME",
+    "REMOTE_TYPE_NAME",
+    "MAX_YEARS_EXPERIENCE",
+    "Average_Salary",
+    "SALARY",
+    "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+]
+
+df_selected = df.select(*export_cols)
+
+# Step 6: Saving to CSV (commented to avoid memory issues)
+pdf = df_selected.toPandas()
+# pdf.to_csv("../data/lightcast_cleaned.csv", index=False)
+
+print("Data cleaning complete. Rows retained:", df_selected.count())
+pdf
+```
