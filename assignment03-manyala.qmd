@@ -134,7 +134,8 @@ industries_df = (
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME"
+        "SOC_5_NAME",
+        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
     )
     .distinct()
     .withColumn("INDUSTRY_ID", monotonically_increasing_id())
@@ -144,7 +145,8 @@ industries_df = (
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME"
+        "SOC_5_NAME",
+        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
     )
     .orderBy("INDUSTRY_ID")
 )
