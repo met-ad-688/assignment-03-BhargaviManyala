@@ -122,30 +122,29 @@ companies.head(4)
 ```
 
 ## Industries Table
-`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`
+`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`,`NAICS2_NAME`,
 
 ```{python}
+
 from pyspark.sql.functions import monotonically_increasing_id
 
 industries_df = (
     df.select(
+        "NAICS2_NAME",
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME",
-        "LOT_SPECIALIZED_OCCUPATION_NAME",
-        "LOT_OCCUPATION_GROUP"
+        "SOC_5_NAME"
     )
     .distinct()
     .withColumn("INDUSTRY_ID", monotonically_increasing_id())
     .select(
         "INDUSTRY_ID",
+        "NAICS2_NAME",
         "NAICS_2022_6",
         "NAICS_2022_6_NAME",
         "SOC_5",
-        "SOC_5_NAME",
-        "LOT_SPECIALIZED_OCCUPATION_NAME",
-        "LOT_OCCUPATION_GROUP"
+        "SOC_5_NAME"
     )
     .orderBy("INDUSTRY_ID")
 )
@@ -154,6 +153,7 @@ industries_df.createOrReplaceTempView("industries")
 
 industries = industries_df.toPandas()
 industries.head()
+
 
 ```
 

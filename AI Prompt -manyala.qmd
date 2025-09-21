@@ -1,0 +1,37 @@
+---
+title: Assignment 03
+author:
+  - name: Bhargavi Manyala
+    affiliations:
+      - id: bu
+        name: Boston University
+        city: Boston
+        state: MA
+number-sections: true
+date: today
+format:
+  html:
+    theme: cerulean
+    toc: true
+    toc-depth: 2
+date-modified: today
+date-format: long
+jupyter: assignment03-venv
+execute:
+  echo: true
+  eval: true
+  freeze: auto
+---
+
+::: {.callout}
+Should I add LOT_V6_SPECIALIZED_OCCUPATION_NAME to the Industries table as well?
+:::
+
+* Yes, you should add LOT_V6_SPECIALIZED_OCCUPATION_NAME to the industries table.
+* Looking at current industries table structure:
+* LOT_SPECIALIZED_OCCUPATION_NAME
+* LOT_OCCUPATION_GROUP
+* Adding LOT_V6_SPECIALIZED_OCCUPATION_NAME makes sense because:
+* Consistency: It's another occupation-related field that belongs with the other LOT (Lightcast/Labor Insight) occupation data
+* Version tracking: The "V6" suggests this might be a newer or different version of the specialized occupation name
+Completeness: Having all occupation-related fields in one dimension table follows good data warehousing practices
