@@ -14,6 +14,12 @@ format:
     theme: cerulean
     toc: true
     toc-depth: 2
+  pdf:  
+    
+    toc-depth: 2
+    geometry: 
+      - landscape
+      - margin=0.5in
 date-modified: today
 date-format: long
 jupyter: assignment03-venv
@@ -22,6 +28,7 @@ execute:
   eval: true
   freeze: auto
 ---
+
 
 # Import Dataset
 
@@ -122,6 +129,9 @@ companies.head(4)
 ```
 
 ## Industries Table
+
+*I referred Claude Sonnet 4 which is included in the AI Prompt file.
+
 `INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`NAICS2_NAME`
 
 ```{python}
@@ -156,21 +166,18 @@ industries_df.createOrReplaceTempView("industries")
 
 industries = industries_df.toPandas()
 industries.head()
-
-
-
-
 ```
 
 ## Job Postings Table
-`ID (Primary Key)`, `TITLE_CLEAN`, `COMPANY_ID (FK to companies)`, `INDUSTRY_ID (FKto industries)`, `EMPLOYMENT_TYPE_NAME`, `REMOTE_TYPE_NAME`, `BODY`,`MIN_YEARS_EXPERIENCE`, `MAX_YEARS_EXPERIENCE`, `SALARY`, `SALARY_FROM`,`SALARY_TO`, `LOCATION_ID (FK to locations)`, `POSTED`, `EXPIRED`, `DURATION`
+
+*I referred Claude Sonnet 4 which is included in the AI Prompt file.
+
+`ID (Primary Key)`,  `COMPANY_ID (FK to companies)`, `INDUSTRY_ID (FKto industries)`, `EMPLOYMENT_TYPE_NAME`, `REMOTE_TYPE_NAME`, ,`MIN_YEARS_EXPERIENCE`, `MAX_YEARS_EXPERIENCE`, `SALARY`, `SALARY_FROM`,`SALARY_TO`, `LOCATION_ID (FK to locations)`, `POSTED`, `EXPIRED`, `DURATION`,`ONET_NAME`,`EDUCATION_LEVELS_NAME`,`LOT_V6_SPECIALIZED_OCCUPATION_NAME`
 
 ```{python}
 
 job_postings_df = df.select(
     "ID",
-    "TITLE_CLEAN",
-    "BODY",
     "COMPANY",            
     "EMPLOYMENT_TYPE_NAME",
     "REMOTE_TYPE_NAME",
@@ -183,11 +190,14 @@ job_postings_df = df.select(
     "NAICS_2022_6",       
     "POSTED",
     "EXPIRED",
-    "DURATION"
+    "DURATION",
+    "ONET_NAME",
+"EDUCATION_LEVELS_NAME",
+"LOT_V6_SPECIALIZED_OCCUPATION_NAME"
 ).withColumnRenamed("ID", "JOB_ID").orderBy("JOB_ID")
 
  
- ```
+```
 
 ### Adding Foreign Keys to Job Postings Table
 
@@ -216,7 +226,6 @@ job_postings_df = job_postings_df.drop("COMPANY", "LAT-LONG")
 job_postings_df.createOrReplaceTempView("job_postings")
 
 job_postings_df.show(truncate=10)
-
 
 ```
 
