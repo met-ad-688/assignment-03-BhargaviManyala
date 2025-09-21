@@ -71,3 +71,15 @@ In Industries table, I currently have INDUSTRY_ID, NAICS_2022_6, NAICS_2022_6_NA
 * LOT_OCCUPATION_GROUP (if you don't need grouping for your analysis)
 * By removing those two, your Industries table will be clean and focused:
 * INDUSTRY_ID, NAICS_2022_6, NAICS_2022_6_NAME, SOC_5, SOC_5_NAME, NAICS2_NAME
+
+::: {.callout}
+n my Job Postings table, I currently have columns like TITLE_CLEAN and BODY, but for Assignment 3 I need ONET_NAME (for Q3) and EDUCATION_LEVELS_NAME (for Q4). Should I remove TITLE_CLEAN and BODY and instead add ONET_NAME and EDUCATION_LEVELS_NAME directly into the Job Postings table?
+:::
+
+* Yes, you should remove TITLE_CLEAN and BODY and add ONET_NAME and EDUCATION_LEVELS_NAME
+* Benefits:
+* Focused on analytics: Only columns needed for Assignment 3 visualizations
+* Better performance: Smaller table size, faster queries and joins
+* Clean structure: No unnecessary text data for visualization tasks
+* Direct access: Both ONET_NAME and EDUCATION_LEVELS_NAME available without extra joins
+* This creates a lean, analytics-focused Job Postings table perfect for your visualization requirements.
