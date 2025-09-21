@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -97,18 +131,44 @@ ul.task-list li input[type="checkbox"] {
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Should I add LOT_V6_SPECIALIZED_OCCUPATION_NAME to the Industries table as well?</p>
+<p>In my code, I am casting salary and experience columns to float and then using approxQuantile to compute medians for SALARY_FROM, SALARY_TO, and SALARY. Can you explain what this casting step and the median calculation are doing, and why they are necessary before filling missing values?</p>
 </div>
 </div>
 </div>
 <ul>
-<li>Yes, you should add LOT_V6_SPECIALIZED_OCCUPATION_NAME to the industries table.</li>
-<li>Looking at current industries table structure, you already have:</li>
-<li>LOT_SPECIALIZED_OCCUPATION_NAME</li>
-<li>LOT_OCCUPATION_GROUP</li>
-<li>Adding LOT_V6_SPECIALIZED_OCCUPATION_NAME makes sense because:</li>
-<li>Consistency: It’s another occupation-related field that belongs with the other LOT (Lightcast/Labor Insight) occupation data</li>
-<li>Version tracking: The “V6” suggests this might be a newer or different version of the specialized occupation name Completeness: Having all occupation-related fields in one dimension table follows good data warehousing practices</li>
+<li>Great question! Let me break down both the casting and median calculation steps:</li>
+</ul>
+<ol type="1">
+<li>Casting to Float</li>
+</ol>
+<div id="6ecd6408" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_FROM"</span>, col(<span class="st">"SALARY_FROM"</span>).cast(<span class="st">"float"</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_TO"</span>, col(<span class="st">"SALARY_TO"</span>).cast(<span class="st">"float"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>salary_from_median <span class="op">=</span> df.approxQuantile(<span class="st">"SALARY_FROM"</span>, [<span class="fl">0.5</span>], <span class="fl">0.01</span>)[<span class="dv">0</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>salary_to_median <span class="op">=</span> df.approxQuantile(<span class="st">"SALARY_TO"</span>, [<span class="fl">0.5</span>], <span class="fl">0.01</span>)[<span class="dv">0</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>salary_median <span class="op">=</span> df.approxQuantile(<span class="st">"SALARY"</span>, [<span class="fl">0.5</span>], <span class="fl">0.01</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>Why casting is necessary:</p></li>
+<li><p>Original data type: These columns are likely stored as strings in the raw data</p></li>
+<li><p>Mathematical operations: You can’t compute medians, averages, or other statistics on string data</p></li>
+<li><p>Null handling: String columns might have values like “N/* A”, “null”, or empty strings that need to become actual null values</p></li>
+<li><p>Performance: Numeric operations on float columns are much faster than string operations</p></li>
+</ul>
+<ol start="2" type="1">
+<li>Median Calculation with approxQuantile</li>
+</ol>
+<ul>
+<li><p>What approxQuantile does:</p></li>
+<li><p>[0.5] = 50th percentile (median)</p></li>
+<li><p>0.01 = 1% approximation error (faster than exact calculation)</p></li>
+<li><p>Returns the middle value when data is sorted</p></li>
+<li><p>Why median for missing value imputation:</p></li>
+<li><p>Robust to outliers: Unlike mean, median isn’t skewed by extremely high/low salaries</p></li>
+<li><p>Representative: Better represents “typical” salary in the dataset</p></li>
+<li><p>Common practice: Standard approach in data preprocessing for salary data</p></li>
 </ul>
 
 </main>

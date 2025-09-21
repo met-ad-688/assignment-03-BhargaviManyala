@@ -221,21 +221,22 @@ job_postings_df.createOrReplaceTempView("job_postings")
 job_postings_df.show(truncate=10)
 ```
 
-## 
+#  Casting salary and experience columns
+
+## Computing medians and Imputing missing salaries
 ```{python}
+
 from pyspark.sql.functions import col
 
-# Step 1: Casting salary and experience columns
 df = df.withColumn("SALARY", col("SALARY").cast("float")) \
        .withColumn("SALARY_FROM", col("SALARY_FROM").cast("float")) \
        .withColumn("SALARY_TO", col("SALARY_TO").cast("float")) \
        .withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast("float")) \
        .withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast("float"))
 
-# Step 2: Computing medians for salary columns
+# Computing medians for salary columns
 def compute_median(sdf, col_name):
-    q = sdf.approxQuantile(col_name, [0.5], 0.01)
-    return q[0] if q else None
+    return sdf.approxQuantile(col_name, [0.5], 0.01)[0]
 
 median_from = compute_median(df, "SALARY_FROM")
 median_to   = compute_median(df, "SALARY_TO")
@@ -243,34 +244,33 @@ median_salary = compute_median(df, "SALARY")
 
 print("Medians:", median_from, median_to, median_salary)
 
-# Step 3: Imputing missing salaries, but not experience
+# Imputing missing salaries, but not experience
 df = df.fillna({
     "SALARY_FROM": median_from,
     "SALARY_TO": median_to,
     "SALARY": median_salary
 })
 
-# Step 4: Computing average salary
+# Computing average salary
 df = df.withColumn(
     "Average_Salary", (col("SALARY_FROM") + col("SALARY_TO")) / 2
 )
 
-# Step 5: Selecting required columns
+# Selecting required columns
 export_cols = [
+    "Average_Salary",
+    "SALARY",
     "EDUCATION_LEVELS_NAME",
     "REMOTE_TYPE_NAME",
     "MAX_YEARS_EXPERIENCE",
-    "Average_Salary",
-    "SALARY",
     "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
 ]
 
 df_selected = df.select(*export_cols)
 
-# Step 6: Saving to CSV (commented to avoid memory issues)
-pdf = df_selected.toPandas()
-# pdf.to_csv("../data/lightcast_cleaned.csv", index=False)
-
-print("Data cleaning complete. Rows retained:", df_selected.count())
-pdf
+pdf_selected = df_selected.toPandas()
+pdf_selected.to_csv("data/lightcast_cleaned.csv", index=False)
+pdf_selected.head()
 ```
+
+## Cleaning Education column and  Exporting Cleaned Data
