@@ -59,4 +59,15 @@ SELECT i.LOT_V6_SPECIALIZED_OCCUPATION_NAME, AVG(j.SALARY)
 FROM job_postings j
 JOIN industries i ON j.INDUSTRY_ID = i.INDUSTRY_ID
 GROUP BY i.LOT_V6_SPECIALIZED_OCCUPATION_NAME
+
 ```
+
+::: {.callout}
+In Industries table, I currently have INDUSTRY_ID, NAICS_2022_6, NAICS_2022_6_NAME, SOC_5, SOC_5_NAME, LOT_SPECIALIZED_OCCUPATION_NAME, LOT_OCCUPATION_GROUP, and NAICS2_NAME. I am planning to remove LOT_SPECIALIZED_OCCUPATION_NAME and LOT_OCCUPATION_GROUP .Should I go ahead and remove just those two columns?
+:::
+
+* Yes, you can remove:
+* LOT_SPECIALIZED_OCCUPATION_NAME (replaced by the V6 version)
+* LOT_OCCUPATION_GROUP (if you don't need grouping for your analysis)
+* By removing those two, your Industries table will be clean and focused:
+* INDUSTRY_ID, NAICS_2022_6, NAICS_2022_6_NAME, SOC_5, SOC_5_NAME, NAICS2_NAME

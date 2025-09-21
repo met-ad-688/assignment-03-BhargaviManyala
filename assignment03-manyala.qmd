@@ -122,7 +122,7 @@ companies.head(4)
 ```
 
 ## Industries Table
-`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`,`NAICS2_NAME`,
+`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`,`NAICS2_NAME`
 
 ```{python}
 
@@ -135,7 +135,8 @@ industries_df = (
         "NAICS_2022_6_NAME",
         "SOC_5",
         "SOC_5_NAME",
-        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+        "LOT_OCCUPATION_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_GROUP"   
     )
     .distinct()
     .withColumn("INDUSTRY_ID", monotonically_increasing_id())
@@ -146,15 +147,32 @@ industries_df = (
         "NAICS_2022_6_NAME",
         "SOC_5",
         "SOC_5_NAME",
-        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+        "LOT_OCCUPATION_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_GROUP"  
+        
     )
     .orderBy("INDUSTRY_ID")
 )
+
+
+from pyspark.sql.functions import col, count, when
+
+# Count missing values
+industries_df.select(
+    count(when(col("LOT_SPECIALIZED_OCCUPATION_NAME").isNull(), 1)).alias("missing_LOT"),
+    count(when(col("LOT_V6_SPECIALIZED_OCCUPATION_NAME").isNull(), 1)).alias("missing_LOT_V6")
+).show()
+
+# Count differences
+industries_df.filter(col("LOT_SPECIALIZED_OCCUPATION_NAME") != col("LOT_V6_SPECIALIZED_OCCUPATION_NAME")).count()
+
 
 industries_df.createOrReplaceTempView("industries")
 
 industries = industries_df.toPandas()
 industries.head()
+
+
 
 
 ```
@@ -217,7 +235,44 @@ job_postings_df.show(truncate=10)
 ```
 
 
+```{python}
 
+from pyspark.sql.functions import monotonically_increasing_id, col, count, when
+
+industries_df = (
+    df.select(
+        "NAICS2_NAME",
+        "NAICS_2022_6",
+        "NAICS_2022_6_NAME",
+        "SOC_5",
+        "SOC_5_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_GROUP",
+        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"   # ✅ add this column
+    )
+    .distinct()
+    .withColumn("INDUSTRY_ID", monotonically_increasing_id())
+    .select(
+        "INDUSTRY_ID",
+        "NAICS2_NAME",
+        "NAICS_2022_6",
+        "NAICS_2022_6_NAME",
+        "SOC_5",
+        "SOC_5_NAME",
+        "LOT_OCCUPATION_NAME",
+        "LOT_SPECIALIZED_OCCUPATION_GROUP",
+        "LOT_V6_SPECIALIZED_OCCUPATION_NAME"   # ✅ keep it here
+    )
+    .orderBy("INDUSTRY_ID")
+)
+
+
+
+industries_df.createOrReplaceTempView("industries")
+
+industries = industries_df.toPandas()
+industries.head()
+```
 
 
 
