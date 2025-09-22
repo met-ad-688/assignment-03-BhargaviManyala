@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Bhargavi Manyala">
-<meta name="dcterms.date" content="2025-09-21">
+<meta name="dcterms.date" content="2025-09-22">
 
 <title>Assignment 03</title>
 <style>
@@ -107,14 +107,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 21, 2025</p>
+      <p class="date">September 22, 2025</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 21, 2025</p>
+      <p class="date-modified">September 22, 2025</p>
     </div>
   </div>
     
@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Casting to Float</li>
 </ol>
-<div id="6ecd6408" class="cell" data-execution_count="1">
+<div id="100cb6cc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_FROM"</span>, col(<span class="st">"SALARY_FROM"</span>).cast(<span class="st">"float"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_TO"</span>, col(<span class="st">"SALARY_TO"</span>).cast(<span class="st">"float"</span>))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>))</span>
@@ -170,6 +170,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Representative: Better represents “typical” salary in the dataset</p></li>
 <li><p>Common practice: Standard approach in data preprocessing for salary data</p></li>
 </ul>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>In my dataset, the column EDUCATION_LEVELS_NAME contains unwanted characters like and for example: [“Bachelor’s degree”]). How can I remove these characters so that the column values look clean (e.g., “Bachelor’s degree”) using PySpark or Pandas?</p>
+</div>
+</div>
+</div>
+<ul>
+<li>PySpark Solution</li>
+</ul>
+<div id="1bf6029b" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, regexp_replace, trim</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 1: Chain multiple regexp_replace calls</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"EDUCATION_LEVELS_NAME"</span>, </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    regexp_replace(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        regexp_replace(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            regexp_replace(col(<span class="st">"EDUCATION_LEVELS_NAME"</span>), <span class="vs">r"[\[\]]"</span>, <span class="st">""</span>),  <span class="co"># Remove brackets</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="vs">r"[\n\r]"</span>, <span class="st">""</span>  <span class="co"># Remove newlines and carriage returns</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        ), </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="vs">r'^\s*"|"\s*$'</span>, <span class="st">""</span>  <span class="co"># Remove quotes at start/end</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 2: Single regexp_replace (more efficient)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"EDUCATION_LEVELS_NAME"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    trim(regexp_replace(col(<span class="st">"EDUCATION_LEVELS_NAME"</span>), <span class="vs">r'[\[\]\n\r"\s]+'</span>, <span class="st">" "</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Pandas Solution</li>
+</ul>
+<div id="1f8831f2" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 1: Using str.replace with regex</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'EDUCATION_LEVELS_NAME'</span>] <span class="op">=</span> df[<span class="st">'EDUCATION_LEVELS_NAME'</span>].<span class="bu">str</span>.replace(<span class="vs">r'[\[\]\n\r"]'</span>, <span class="st">''</span>, regex<span class="op">=</span><span class="va">True</span>).<span class="bu">str</span>.strip()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 2: More comprehensive cleaning</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_education(text):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pd.isna(text):</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> text</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove brackets, newlines, quotes, and extra spaces</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    cleaned <span class="op">=</span> re.sub(<span class="vs">r'[\[\]\n\r"]'</span>, <span class="st">''</span>, <span class="bu">str</span>(text))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cleaned.strip()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'EDUCATION_LEVELS_NAME'</span>] <span class="op">=</span> df[<span class="st">'EDUCATION_LEVELS_NAME'</span>].<span class="bu">apply</span>(clean_education)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 </main>
 <!-- /main column -->

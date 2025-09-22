@@ -63,3 +63,51 @@ salary_median = df.approxQuantile("SALARY", [0.5], 0.01)[0]
 * Robust to outliers: Unlike mean, median isn't skewed by extremely high/low salaries
 * Representative: Better represents "typical" salary in the dataset
 * Common practice: Standard approach in data preprocessing for salary data
+
+::: {.callout}
+In my dataset, the column EDUCATION_LEVELS_NAME contains unwanted characters like \n and \r (for example: [\n "Bachelor's degree"\n]). How can I remove these characters so that the column values look clean (e.g., "Bachelor's degree") using PySpark or Pandas?
+:::
+
+* PySpark Solution
+```{python}
+#| echo: true
+#| eval: false
+#| 
+from pyspark.sql.functions import col, regexp_replace, trim
+
+# Method 1: Chain multiple regexp_replace calls
+df = df.withColumn("EDUCATION_LEVELS_NAME", 
+    regexp_replace(
+        regexp_replace(
+            regexp_replace(col("EDUCATION_LEVELS_NAME"), r"[\[\]]", ""),  # Remove brackets
+            r"[\n\r]", ""  # Remove newlines and carriage returns
+        ), 
+        r'^\s*"|"\s*$', ""  # Remove quotes at start/end
+    )
+)
+
+# Method 2: Single regexp_replace (more efficient)
+df = df.withColumn("EDUCATION_LEVELS_NAME",
+    trim(regexp_replace(col("EDUCATION_LEVELS_NAME"), r'[\[\]\n\r"\s]+', " "))
+)
+```
+
+* Pandas Solution
+```{python}
+#| echo: true
+#| eval: false
+import re
+
+# Method 1: Using str.replace with regex
+df['EDUCATION_LEVELS_NAME'] = df['EDUCATION_LEVELS_NAME'].str.replace(r'[\[\]\n\r"]', '', regex=True).str.strip()
+
+# Method 2: More comprehensive cleaning
+def clean_education(text):
+    if pd.isna(text):
+        return text
+    # Remove brackets, newlines, quotes, and extra spaces
+    cleaned = re.sub(r'[\[\]\n\r"]', '', str(text))
+    return cleaned.strip()
+
+df['EDUCATION_LEVELS_NAME'] = df['EDUCATION_LEVELS_NAME'].apply(clean_education)
+```

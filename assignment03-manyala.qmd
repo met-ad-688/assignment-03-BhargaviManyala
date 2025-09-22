@@ -54,6 +54,8 @@ df = (
 
 #df.show(5)
 
+
+
 ```
 
 
@@ -271,6 +273,7 @@ df_selected = df.select(*export_cols)
 pdf_selected = df_selected.toPandas()
 pdf_selected.to_csv("data/lightcast_cleaned.csv", index=False)
 pdf_selected.head()
+
 ```
 
 ## Cleaning Education column and  Exporting Cleaned Data
