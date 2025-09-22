@@ -271,9 +271,30 @@ export_cols = [
 df_selected = df.select(*export_cols)
 
 pdf_selected = df_selected.toPandas()
-pdf_selected.to_csv("data/lightcast_cleaned.csv", index=False)
 pdf_selected.head()
 
 ```
 
 ## Cleaning Education column and  Exporting Cleaned Data
+
+*I referred to Claude Sonnet 4 for prompts and sample code ideas, but I wrote and adapted the final implementation myself
+
+```{python}
+# To remove \n and \r
+pdf_selected["EDUCATION_LEVELS_NAME"] = (
+    pdf_selected["EDUCATION_LEVELS_NAME"]
+    .astype(str)               
+    .str.replace(r"[\n\r]", "", regex=True)
+    .str.strip()                
+)
+pdf_selected.to_csv("data/lightcast_cleaned.csv", index=False)
+pdf_selected.head()
+```
+
+## Exporting Cleaned Data
+
+```{python}
+print("Data cleaning complete. Rows retained:", len(pdf_selected))
+
+```
+
