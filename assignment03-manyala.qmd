@@ -391,7 +391,7 @@ df_pd["MAX_EXPERIENCE_JITTER"] = (
     df_pd["MAX_EXPERIENCE"] + np.random.uniform(-0.3, 0.3, len(df_pd))
 )
 
-# Scatter plot
+
 fig = px.scatter(
     df_pd,
     x="MAX_EXPERIENCE_JITTER",
@@ -399,15 +399,13 @@ fig = px.scatter(
     color="EDU_GROUP",
     hover_data=["OCCUPATION_NAME", "MAX_EXPERIENCE", "AVERAGE_SALARY"],
     title="Salary vs Experience by Education Level",
-    color_discrete_map={
-        "Bachelor": "#1f77b4",          # blue
-        "Associate or Lower": "#8c564b",# brown/red
-        "Master’s": "#17becf",          # teal/light blue
-        "PhD": "#ff7f0e"                # orange/gold
-    }
+    color_discrete_map = {
+    "Bachelor": "#1f77b4",        
+    "Associate or Lower": "#d62728",  
+    "Master’s": "#2ca02c",        
+    "PhD": "#9467bd"              
+}
 )
-
-
 
 fig.update_layout(
     xaxis_title="Max Years Experience",
@@ -419,10 +417,17 @@ fig.update_layout(
 )
 
 fig.write_html("./output/Q4.html")
-fig.write_image("./output/Q4.png", width=900, height=600, scale=1)
+fig.write_image("./output/Q4.png", width=900, height=800, scale=1)
 
 ```
 
 ![](./output/Q4.png)
 
 ## Interpretation
+* Salaries tend to increase with years of experience, though variation exists across education levels.
+* PhD and Master’s degree holders generally earn the highest salaries, while Associate or lower groups comparatively earn less.
+
+#  Salary by Remote Work Type
+
+```{python}
+
