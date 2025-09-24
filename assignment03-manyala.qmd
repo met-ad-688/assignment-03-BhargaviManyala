@@ -146,7 +146,7 @@ print("Data cleaning complete. Rows retained:", len(pdf_selected))
 
 ```
 
-# Query 1: Salary Distribution by Industry and Employment Type
+# Salary Distribution by Industry and Employment Type
 
 ## Salary Distribution by Employment Type
 ```{python}
@@ -213,7 +213,7 @@ fig.update_layout(
         tickfont=dict(size=12, family="Arial Black", color="black"),              
     ),
     font=dict(family="Arial", size=16, color="black"),
-    boxgap=0.3,
+    boxgap=0.7,
     showlegend=False,
     height=500,
     width=850,
@@ -236,14 +236,14 @@ fig.write_image("./output/Q1.png", width = 850, height = 500, scale=1)
 
 ```{python}
 
-# Filter dataset: remove missing or zero salaries
+
 pdf = df.select(
     "NAICS2_NAME",
     "SALARY"
 ).toPandas()
 
 
-# Create box plot
+
 fig = px.box(
     pdf,
     x="NAICS2_NAME",
@@ -253,7 +253,7 @@ fig = px.box(
     points="outliers"
 )
 
-# Customize layout
+
 fig.update_layout(
     height=500,
     font_family="Arial",
@@ -264,7 +264,7 @@ fig.update_layout(
     
 )
 
-# Save outputs
+
 fig.write_html("./output/Q2.html")
 fig.write_image("./output/Q2.png", width=1000, height=600, scale=1)
 
@@ -274,4 +274,72 @@ fig.write_image("./output/Q2.png", width=1000, height=600, scale=1)
 ![](./output/Q2.png)
 
 ### Interpretation
+* The boxplot indicates that salary levels differ across industries, with Information, Finance, and Professional Services showing higher median salaries.
+*Education and Public Admiration have lower median salaries with narrower ranges.
+* Most industries center around $100k, though some display wider variation and notable outliers.
 
+# Salary Analysis by ONET Occupation Type (Bubble Chart)
+
+```{python}
+salary_analysis = spark.sql("""
+SELECT
+    LOT_OCCUPATION_NAME AS Occupation_Name,
+    PERCENTILE(SALARY, 0.5) AS Median_Salary,
+    COUNT(*) AS Job_Postings
+FROM job_postings
+GROUP BY LOT_OCCUPATION_NAME
+ORDER BY Job_Postings DESC
+LIMIT 10
+""")
+
+salary_pd = salary_analysis.toPandas()
+salary_pd.head()
+```
+
+```{python}
+
+fig = px.scatter(
+   salary_pd,
+   x="Occupation_Name",
+   y="Median_Salary",
+   size="Job_Postings",
+   title="Salary Analysis by LOT Occupation Type (Bubble Chart)",
+   labels={
+       "Occupation_Name": "LOT Occupation",
+       "Median_Salary": "Median Salary",
+       "Job_Postings": "Number of Job Postings",
+   },
+   hover_name="Occupation_Name",
+   size_max=60,
+   width=900,
+   height=800,
+   color="Job_Postings",
+   color_continuous_scale="Plasma",
+)
+
+fig.update_layout(
+   font_family="Arial",
+   font_size=14,
+   title_font_size=22,
+   xaxis_title="LOT Occupation",
+   yaxis_title="Median Salary",
+   plot_bgcolor="white",
+   xaxis=dict(
+       tickangle=-45,
+       showline=True,
+       linecolor="black",
+   ),
+   yaxis=dict(
+       showline=True,
+       linecolor="black",
+   ),
+)
+
+fig.write_html("./output/Q3.html")
+fig.write_image("./output/Q3.png", width=900, height=800, scale=1)
+
+```
+
+![](./output/Q3.png)
+
+### Interpretation
