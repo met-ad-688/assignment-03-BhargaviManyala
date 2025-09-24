@@ -71,170 +71,6 @@ df = (
 
 
 
-# Relational Tables 
-
-## Loactions Table
-`LOCATION_ID (Primary Key)`,`LOCATION`, `CITY_NAME`, `STATE_NAME`, `COUNTY_NAME`,`MSA`, `MSA_NAME`
-
-```{python}
-from pyspark.sql.functions import monotonically_increasing_id
-
-
-locations_df = (
-    df.select(
-        "LOCATION",
-        "CITY_NAME",
-        "STATE_NAME",
-        "COUNTY_NAME",
-        "MSA",
-        "MSA_NAME"
-    )
-    .distinct()
-    .withColumn("LOCATION_ID", monotonically_increasing_id())
-    .select(
-        "LOCATION_ID",
-        "LOCATION",
-        "CITY_NAME",
-        "STATE_NAME",
-        "COUNTY_NAME",
-        "MSA",
-        "MSA_NAME"
-    )
-    .orderBy("LOCATION_ID")
-)
-
-locations_df.createOrReplaceTempView("locations")
-
-locations = locations_df.toPandas()
-locations.head()
-
-```
-
-## Companies Table
-`COMPANY_ID (Primary Key)`, `COMPANY`, `COMPANY_NAME`, `COMPANY_RAW`, `COMPANY_IS_STAFFING`
-
-```{python}
-from pyspark.sql.functions import monotonically_increasing_id
-
-companies_df = (
-    df.select(
-        "COMPANY",
-        "COMPANY_NAME",
-        "COMPANY_RAW",
-        "COMPANY_IS_STAFFING"
-    )
-    .distinct()
-    .withColumn("COMPANY_ID", monotonically_increasing_id())
-    .select(
-        "COMPANY_ID",
-        "COMPANY",
-        "COMPANY_NAME",
-        "COMPANY_RAW",
-        "COMPANY_IS_STAFFING"
-    )
-    .orderBy("COMPANY_ID")
-)
-
-companies_df.createOrReplaceTempView("companies")
-
-companies = companies_df.toPandas()
-companies.head(4)
-
-```
-
-## Industries Table
-
-`INDUSTRY_ID (Primary Key)`, `NAICS_2022_6`, `NAICS_2022_6_NAME`, `SOC_5`, `SOC_5_NAME`,`LOT_SPECIALIZED_OCCUPATION_NAME`,`LOT_OCCUPATION_GROUP`
-
-```{python}
-from pyspark.sql.functions import monotonically_increasing_id
-
-industries_df = (
-    df.select(
-        "NAICS_2022_6",
-        "NAICS_2022_6_NAME",
-        "SOC_5",
-        "SOC_5_NAME",
-        "LOT_SPECIALIZED_OCCUPATION_NAME",
-        "LOT_OCCUPATION_GROUP"
-    )
-    .distinct()
-    .withColumn("INDUSTRY_ID", monotonically_increasing_id())
-    .select(
-        "INDUSTRY_ID",
-        "NAICS_2022_6",
-        "NAICS_2022_6_NAME",
-        "SOC_5",
-        "SOC_5_NAME",
-        "LOT_SPECIALIZED_OCCUPATION_NAME",
-        "LOT_OCCUPATION_GROUP"
-    )
-    .orderBy("INDUSTRY_ID")
-)
-
-industries_df.createOrReplaceTempView("industries")
-
-industries = industries_df.toPandas()
-industries.head()
-
-```
-
-## Job Postings Table
-
-`ID (Primary Key)`, `TITLE_CLEAN`, `COMPANY_ID (FK to companies)`, `INDUSTRY_ID (FKto industries)`, `EMPLOYMENT_TYPE_NAME`, `REMOTE_TYPE_NAME`, `BODY`,`MIN_YEARS_EXPERIENCE`, `MAX_YEARS_EXPERIENCE`, `SALARY`, `SALARY_FROM`,`SALARY_TO`, `LOCATION_ID (FK to locations)`, `POSTED`, `EXPIRED`, `DURATION`
-
-
-```{python}
-job_postings_df = df.select(
-    "ID",
-    "TITLE_CLEAN",
-    "BODY",
-    "COMPANY",            
-    "EMPLOYMENT_TYPE_NAME",
-    "REMOTE_TYPE_NAME",
-    "MIN_YEARS_EXPERIENCE",
-    "MAX_YEARS_EXPERIENCE",
-    "SALARY",
-    "SALARY_FROM",
-    "SALARY_TO",
-    "LOCATION",           
-    "NAICS_2022_6",       
-    "POSTED",
-    "EXPIRED",
-    "DURATION"
-).withColumnRenamed("ID", "JOB_ID").orderBy("JOB_ID")
- 
-```
-
-### Adding Foreign Keys to Job Postings Table
-
-```{python}
-job_postings_df = job_postings_df.join(
-    companies_df.select("COMPANY", "COMPANY_ID"),
-    on="COMPANY", 
-    how="left"
-)
-
-# Join with Locations Table to get LOCATION_ID
-job_postings_df = job_postings_df.join(
-    locations_df.select("LOCATION", "LOCATION_ID"),
-    job_postings_df.LOCATION == locations_df.LOCATION,
-    how="left"
-).drop("LOCATION")
-
-# Join with Industries Table to get INDUSTRY_ID
-job_postings_df = job_postings_df.join(
-    industries_df.select("NAICS_2022_6", "INDUSTRY_ID"),
-    job_postings_df.NAICS_2022_6 == industries_df.NAICS_2022_6,
-    how="left"
-).drop("NAICS_2022_6")
-
-job_postings_df = job_postings_df.drop("COMPANY", "LAT-LONG")
-job_postings_df.createOrReplaceTempView("job_postings")
-
-job_postings_df.show(truncate=10)
-```
-
 #  Casting salary and experience columns
 
 ## Computing medians and Imputing missing salaries
@@ -261,8 +97,7 @@ print("Medians:", median_from, median_to, median_salary)
 # Imputing missing salaries, but not experience
 df = df.fillna({
     "SALARY_FROM": median_from,
-    "SALARY_TO": median_to,
-    "SALARY": median_salary
+    "SALARY_TO": median_to
 })
 
 # Computing average salary
@@ -406,7 +241,7 @@ fig.update_layout(
 
 # Show the figure
 
-fig.show()
+
 fig.write_html("./output/Q1.html")
 fig.write_image("./output/Q1.png", width = 850, height = 500, scale=1)
 ```
