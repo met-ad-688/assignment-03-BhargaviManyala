@@ -430,12 +430,12 @@ fig.write_image("./output/Q4.png", width=900, height=800, scale=1)
 #  Salary by Remote Work Type
 
 ```{python}
-
+from pyspark.sql.functions import col, when, lower, trim
 
 df = df.withColumn(
     "REMOTE_GROUP",
-    when(col("REMOTE_TYPE_NAME").rlike("(?i)Remote"), "Remote")
-    .when(col("REMOTE_TYPE_NAME").rlike("(?i)Hybrid"), "Hybrid")
+    when(lower(trim(col("REMOTE_TYPE_NAME"))).rlike("hyb|mix|partial|split|combo"), "Hybrid")
+    .when(lower(trim(col("REMOTE_TYPE_NAME"))).rlike("remote|wfh|home|tele"), "Remote")
     .otherwise("Onsite")
 )
 
@@ -458,4 +458,62 @@ df_selected = df.select(
 
 df_pd = df_selected.toPandas()
 df_pd.head()
+
 ```
+
+```{python}
+
+order     = ["Onsite", "Remote", "Hybrid"]
+color_map = {"Onsite":"#2a9d8f", "Remote":"#e76f51", "Hybrid":"#264653"}  
+
+fig = px.scatter(
+    df_pd,
+    x="MAX_EXPERIENCE",
+    y="AVERAGE_SALARY",
+    color="REMOTE_GROUP",
+    category_orders={"REMOTE_GROUP": order},
+    color_discrete_map=color_map,
+    title="Salary vs Experience by Remote Work Type",
+    labels={
+        "MAX_EXPERIENCE": "Years of Experience",
+        "AVERAGE_SALARY": "Average Salary (USD)"
+    },
+    opacity=0.85,
+    hover_data=["OCCUPATION_NAME", "MAX_EXPERIENCE", "AVERAGE_SALARY"]
+)
+
+fig.update_layout(
+    paper_bgcolor="#F9FAFB",
+    plot_bgcolor="#FFFFFF",
+    margin=dict(l=60, r=60, t=80, b=70),
+    xaxis=dict(
+        tickmode="linear", dtick=1,
+        gridcolor="rgba(0,0,0,0.1)",
+        zeroline=False
+    ),
+    yaxis=dict(
+        gridcolor="rgba(0,0,0,0.1)",
+        zeroline=False
+    ),
+    legend=dict(
+        bgcolor="rgba(249,250,251,0.85)",
+        bordercolor="#D1D5DB", borderwidth=1,
+        title_text="Remote Work Type"
+    ),
+    font_family="Arial",
+    title_font_size=18
+)
+
+fig.update_traces(marker=dict(size=7, opacity=0.85, line=dict(width=0)))
+
+fig.write_html("./output/Q5.html")
+fig.write_image("./output/Q5.png", width=1000, height=600, scale=1)
+
+
+```
+
+![](./output/Q5.png)
+
+## Interpretation
+* Professionals across all work types (Onsite, Remote, Hybrid) demonstrate similar salary trends with increasing experience.
+* Hybrid roles appear less frequent but generally align with the salary range of Onsite and Remote roles.

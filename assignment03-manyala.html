@@ -104,7 +104,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#interpretation-3" id="toc-interpretation-3" class="nav-link" data-scroll-target="#interpretation-3"><span class="header-section-number">5.1</span> Interpretation</a></li>
   </ul></li>
-  <li><a href="#salary-by-remote-work-type" id="toc-salary-by-remote-work-type" class="nav-link" data-scroll-target="#salary-by-remote-work-type"><span class="header-section-number">6</span> Salary by Remote Work Type</a></li>
+  <li><a href="#salary-by-remote-work-type" id="toc-salary-by-remote-work-type" class="nav-link" data-scroll-target="#salary-by-remote-work-type"><span class="header-section-number">6</span> Salary by Remote Work Type</a>
+  <ul class="collapse">
+  <li><a href="#interpretation-4" id="toc-interpretation-4" class="nav-link" data-scroll-target="#interpretation-4"><span class="header-section-number">6.1</span> Interpretation</a></li>
+  </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="assignment03-manyala.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
@@ -156,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="import-dataset" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Import Dataset</h1>
-<div id="c6ad16f4" class="cell" data-execution_count="1">
+<div id="63605fa0" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
@@ -186,8 +189,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/24 07:50:03 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 07:50:17 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
+25/09/24 08:29:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 08:30:03 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
 </div>
 </div>
 </section>
@@ -195,7 +198,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="2"><span class="header-section-number">2</span> Casting salary and experience columns</h1>
 <section id="computing-medians-and-imputing-missing-salaries" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="computing-medians-and-imputing-missing-salaries"><span class="header-section-number">2.1</span> Computing medians and Imputing missing salaries</h2>
-<div id="98bd28f8" class="cell" data-execution_count="2">
+<div id="f52225fd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>)) <span class="op">\</span></span>
@@ -320,7 +323,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <section id="cleaning-education-column-and-exporting-cleaned-data" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="cleaning-education-column-and-exporting-cleaned-data"><span class="header-section-number">2.2</span> Cleaning Education column and Exporting Cleaned Data</h2>
 <p>*I referred to Claude Sonnet 4 for prompts and sample code ideas, but I wrote and adapted the final implementation myself</p>
-<div id="75c24d45" class="cell" data-execution_count="3">
+<div id="92bbe75e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To remove \n and \r</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>] <span class="op">=</span> (</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>]</span>
@@ -401,7 +404,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="exporting-cleaned-data" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="exporting-cleaned-data"><span class="header-section-number">2.3</span> Exporting Cleaned Data</h2>
-<div id="7497a036" class="cell" data-execution_count="4">
+<div id="abd88132" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data cleaning complete. Rows retained:"</span>, <span class="bu">len</span>(pdf_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data cleaning complete. Rows retained: 72498</code></pre>
@@ -413,7 +416,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="3"><span class="header-section-number">3</span> Salary Distribution by Industry and Employment Type</h1>
 <section id="salary-distribution-by-employment-type" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="salary-distribution-by-employment-type"><span class="header-section-number">3.1</span> Salary Distribution by Employment Type</h2>
-<div id="dee6d7e2" class="cell" data-execution_count="5">
+<div id="01d161dc" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
@@ -443,7 +446,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <pre><code>[Stage 6:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
-<div id="0cc1b230" class="cell" data-execution_count="6">
+<div id="118e5981" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pdf,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
@@ -499,7 +502,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-distribution-by-industry" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="salary-distribution-by-industry"><span class="header-section-number">3.2</span> Salary Distribution by Industry</h2>
-<div id="4ae04e96" class="cell" data-execution_count="7">
+<div id="084e8959" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY"</span></span>
@@ -546,7 +549,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-analysis-by-onet-occupation-type-bubble-chart" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Salary Analysis by ONET Occupation Type (Bubble Chart)</h1>
-<div id="c09e0808" class="cell" data-execution_count="8">
+<div id="963bb6bf" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>salary_analysis <span class="op">=</span> spark.sql(<span class="st">"""</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">    LOT_OCCUPATION_NAME AS Occupation_Name,</span></span>
@@ -613,7 +616,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="d54438b1" class="cell" data-execution_count="9">
+<div id="d9d51959" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>   salary_pd,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>   x<span class="op">=</span><span class="st">"Occupation_Name"</span>,</span>
@@ -666,7 +669,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-by-education-level" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Salary by Education Level</h1>
-<div id="94486bb0" class="cell" data-execution_count="10">
+<div id="86934e2b" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(</span>
@@ -757,7 +760,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="9f7fbe46" class="cell" data-execution_count="11">
+<div id="e0536d05" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_pd[<span class="st">"MAX_EXPERIENCE_JITTER"</span>] <span class="op">=</span> (</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    df_pd[<span class="st">"MAX_EXPERIENCE"</span>] <span class="op">+</span> np.random.uniform(<span class="op">-</span><span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="bu">len</span>(df_pd))</span>
@@ -802,33 +805,35 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-by-remote-work-type" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Salary by Remote Work Type</h1>
-<div id="b27e85de" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REMOTE_GROUP"</span>,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    when(col(<span class="st">"REMOTE_TYPE_NAME"</span>).rlike(<span class="st">"(?i)Remote"</span>), <span class="st">"Remote"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    .when(col(<span class="st">"REMOTE_TYPE_NAME"</span>).rlike(<span class="st">"(?i)Hybrid"</span>), <span class="st">"Hybrid"</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    .otherwise(<span class="st">"Onsite"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MAX_YEARS_EXPERIENCE"</span>, col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).cast(<span class="st">"float"</span>))</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"Average_Salary"</span>, col(<span class="st">"Average_Salary"</span>).cast(<span class="st">"float"</span>))</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.<span class="bu">filter</span>(</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).isNotNull() <span class="op">&amp;</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>) <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"Average_Salary"</span>).isNotNull() <span class="op">&amp;</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"Average_Salary"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df.select(</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).alias(<span class="st">"MAX_EXPERIENCE"</span>),</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"Average_Salary"</span>).alias(<span class="st">"AVERAGE_SALARY"</span>),</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"REMOTE_GROUP"</span>),</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"LOT_V6_SPECIALIZED_OCCUPATION_NAME"</span>).alias(<span class="st">"OCCUPATION_NAME"</span>)</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>df_pd <span class="op">=</span> df_selected.toPandas()</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>df_pd.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5b276c58" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when, lower, trim</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REMOTE_GROUP"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    when(lower(trim(col(<span class="st">"REMOTE_TYPE_NAME"</span>))).rlike(<span class="st">"hyb|mix|partial|split|combo"</span>), <span class="st">"Hybrid"</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    .when(lower(trim(col(<span class="st">"REMOTE_TYPE_NAME"</span>))).rlike(<span class="st">"remote|wfh|home|tele"</span>), <span class="st">"Remote"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    .otherwise(<span class="st">"Onsite"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MAX_YEARS_EXPERIENCE"</span>, col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).cast(<span class="st">"float"</span>))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"Average_Salary"</span>, col(<span class="st">"Average_Salary"</span>).cast(<span class="st">"float"</span>))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.<span class="bu">filter</span>(</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).isNotNull() <span class="op">&amp;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>) <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"Average_Salary"</span>).isNotNull() <span class="op">&amp;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"Average_Salary"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df.select(</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).alias(<span class="st">"MAX_EXPERIENCE"</span>),</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"Average_Salary"</span>).alias(<span class="st">"AVERAGE_SALARY"</span>),</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"REMOTE_GROUP"</span>),</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"LOT_V6_SPECIALIZED_OCCUPATION_NAME"</span>).alias(<span class="st">"OCCUPATION_NAME"</span>)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>df_pd <span class="op">=</span> df_selected.toPandas()</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>df_pd.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[Stage 12:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
 </div>
@@ -888,6 +893,61 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
+<div id="b66d31bc" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>order     <span class="op">=</span> [<span class="st">"Onsite"</span>, <span class="st">"Remote"</span>, <span class="st">"Hybrid"</span>]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>color_map <span class="op">=</span> {<span class="st">"Onsite"</span>:<span class="st">"#2a9d8f"</span>, <span class="st">"Remote"</span>:<span class="st">"#e76f51"</span>, <span class="st">"Hybrid"</span>:<span class="st">"#264653"</span>}  </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    df_pd,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"MAX_EXPERIENCE"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"AVERAGE_SALARY"</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"REMOTE_GROUP"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">"REMOTE_GROUP"</span>: order},</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>color_map,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Salary vs Experience by Remote Work Type"</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>{</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"MAX_EXPERIENCE"</span>: <span class="st">"Years of Experience"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AVERAGE_SALARY"</span>: <span class="st">"Average Salary (USD)"</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">0.85</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    hover_data<span class="op">=</span>[<span class="st">"OCCUPATION_NAME"</span>, <span class="st">"MAX_EXPERIENCE"</span>, <span class="st">"AVERAGE_SALARY"</span>]</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    paper_bgcolor<span class="op">=</span><span class="st">"#F9FAFB"</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    plot_bgcolor<span class="op">=</span><span class="st">"#FFFFFF"</span>,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    margin<span class="op">=</span><span class="bu">dict</span>(l<span class="op">=</span><span class="dv">60</span>, r<span class="op">=</span><span class="dv">60</span>, t<span class="op">=</span><span class="dv">80</span>, b<span class="op">=</span><span class="dv">70</span>),</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    xaxis<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>        tickmode<span class="op">=</span><span class="st">"linear"</span>, dtick<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>        gridcolor<span class="op">=</span><span class="st">"rgba(0,0,0,0.1)"</span>,</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>        zeroline<span class="op">=</span><span class="va">False</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    yaxis<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>        gridcolor<span class="op">=</span><span class="st">"rgba(0,0,0,0.1)"</span>,</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>        zeroline<span class="op">=</span><span class="va">False</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>        bgcolor<span class="op">=</span><span class="st">"rgba(249,250,251,0.85)"</span>,</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>        bordercolor<span class="op">=</span><span class="st">"#D1D5DB"</span>, borderwidth<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>        title_text<span class="op">=</span><span class="st">"Remote Work Type"</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    font_family<span class="op">=</span><span class="st">"Arial"</span>,</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>    title_font_size<span class="op">=</span><span class="dv">18</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>fig.update_traces(marker<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">7</span>, opacity<span class="op">=</span><span class="fl">0.85</span>, line<span class="op">=</span><span class="bu">dict</span>(width<span class="op">=</span><span class="dv">0</span>)))</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"./output/Q5.html"</span>)</span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>fig.write_image(<span class="st">"./output/Q5.png"</span>, width<span class="op">=</span><span class="dv">1000</span>, height<span class="op">=</span><span class="dv">600</span>, scale<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="./output/Q5.png" class="img-fluid"></p>
+<section id="interpretation-4" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="interpretation-4"><span class="header-section-number">6.1</span> Interpretation</h2>
+<ul>
+<li>Professionals across all work types (Onsite, Remote, Hybrid) demonstrate similar salary trends with increasing experience.</li>
+<li>Hybrid roles appear less frequent but generally align with the salary range of Onsite and Remote roles.</li>
+</ul>
+</section>
 </section>
 
 </main>
