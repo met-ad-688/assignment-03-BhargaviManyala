@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#query-1-salary-distribution-by-industry-and-employment-type" id="toc-query-1-salary-distribution-by-industry-and-employment-type" class="nav-link" data-scroll-target="#query-1-salary-distribution-by-industry-and-employment-type"><span class="header-section-number">3</span> Query 1: Salary Distribution by Industry and Employment Type</a>
   <ul class="collapse">
   <li><a href="#salary-distribution-by-employment-type" id="toc-salary-distribution-by-employment-type" class="nav-link" data-scroll-target="#salary-distribution-by-employment-type"><span class="header-section-number">3.1</span> Salary Distribution by Employment Type</a></li>
+  <li><a href="#salary-distribution-by-industry" id="toc-salary-distribution-by-industry" class="nav-link" data-scroll-target="#salary-distribution-by-industry"><span class="header-section-number">3.2</span> Salary Distribution by Industry</a></li>
   </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="assignment03-manyala.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
@@ -146,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="import-dataset" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Import Dataset</h1>
-<div id="3ae9e8b8" class="cell" data-execution_count="1">
+<div id="c901ac63" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
@@ -176,8 +177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/24 04:23:28 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 04:23:42 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
+25/09/24 05:29:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 05:29:50 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
 </div>
 </div>
 </section>
@@ -185,7 +186,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="2"><span class="header-section-number">2</span> Casting salary and experience columns</h1>
 <section id="computing-medians-and-imputing-missing-salaries" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="computing-medians-and-imputing-missing-salaries"><span class="header-section-number">2.1</span> Computing medians and Imputing missing salaries</h2>
-<div id="27772be1" class="cell" data-execution_count="2">
+<div id="8c629f21" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>)) <span class="op">\</span></span>
@@ -310,7 +311,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <section id="cleaning-education-column-and-exporting-cleaned-data" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="cleaning-education-column-and-exporting-cleaned-data"><span class="header-section-number">2.2</span> Cleaning Education column and Exporting Cleaned Data</h2>
 <p>*I referred to Claude Sonnet 4 for prompts and sample code ideas, but I wrote and adapted the final implementation myself</p>
-<div id="e16d88bf" class="cell" data-execution_count="3">
+<div id="f380d41d" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To remove \n and \r</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>] <span class="op">=</span> (</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>]</span>
@@ -391,7 +392,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="exporting-cleaned-data" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="exporting-cleaned-data"><span class="header-section-number">2.3</span> Exporting Cleaned Data</h2>
-<div id="d20a066d" class="cell" data-execution_count="4">
+<div id="b1eccc8a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data cleaning complete. Rows retained:"</span>, <span class="bu">len</span>(pdf_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data cleaning complete. Rows retained: 72498</code></pre>
@@ -403,41 +404,39 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="3"><span class="header-section-number">3</span> Query 1: Salary Distribution by Industry and Employment Type</h1>
 <section id="salary-distribution-by-employment-type" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="salary-distribution-by-employment-type"><span class="header-section-number">3.1</span> Salary Distribution by Employment Type</h2>
-<div id="55ff497d" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_query1 <span class="op">=</span> df.select(</span>
+<div id="db0c4657" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>).toPandas()</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>pdf_query1 <span class="op">=</span> df_query1.toPandas()</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>pdf_query1 <span class="op">=</span> pdf_query1[pdf_query1[<span class="st">"SALARY"</span>] <span class="op">&gt;</span> <span class="dv">0</span>]</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>pdf_query1[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>] <span class="op">=</span> (</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    pdf_query1[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>]</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>) </span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> x: re.sub(<span class="vs">r"[^\x00-\x7F]+"</span>, <span class="st">""</span>, x)) </span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.strip()  </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#pdf_query1 = pdf_query1[pdf_query1["EMPLOYMENT_TYPE_NAME"] != "None"]</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> pdf[pdf[<span class="st">"SALARY"</span>] <span class="op">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>pdf[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>] <span class="op">=</span> (</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    pdf[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>) </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> x: re.sub(<span class="vs">r"[^\x00-\x7F]+"</span>, <span class="st">""</span>, x)) </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.strip()  </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>median_salaries <span class="op">=</span> pdf.groupby(<span class="st">"EMPLOYMENT_TYPE_NAME"</span>)[<span class="st">"SALARY"</span>].median()</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>median_salaries <span class="op">=</span> pdf_query1.groupby(<span class="st">"EMPLOYMENT_TYPE_NAME"</span>)[<span class="st">"SALARY"</span>].median()</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>sorted_employment_types <span class="op">=</span> median_salaries.sort_values(ascending<span class="op">=</span><span class="va">False</span>).index</span>
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>sorted_employment_types <span class="op">=</span> median_salaries.sort_values(ascending<span class="op">=</span><span class="va">False</span>).index</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>pdf_query1[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>] <span class="op">=</span> pd.Categorical(</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    pdf_query1[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>],</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    categories<span class="op">=</span>sorted_employment_types,</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    ordered<span class="op">=</span><span class="va">True</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>pdf[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>] <span class="op">=</span> pd.Categorical(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    pdf[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>],</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    categories<span class="op">=</span>sorted_employment_types,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    ordered<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[Stage 6:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
-<div id="deb36e09" class="cell" data-execution_count="6">
+<div id="17fa2454" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pdf_query1,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pdf,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"SALARY"</span>,</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Salary Distribution by Employment Type"</span>,</span>
@@ -448,56 +447,37 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        text<span class="op">=</span><span class="st">"Salary Distribution by Employment Type"</span>,</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        font<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">20</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>),  </span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="fl">0.5</span>  </span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    xaxis<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>            text<span class="op">=</span><span class="st">"Employment Type"</span>,</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>            font<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">14</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>)  </span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        tickangle<span class="op">=-</span><span class="dv">45</span>,</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        tickfont<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">12</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>),  </span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        showline<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        linecolor<span class="op">=</span><span class="st">"black"</span>,</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        linewidth<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        mirror<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        showgrid<span class="op">=</span><span class="va">False</span>,  </span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        categoryorder<span class="op">=</span><span class="st">"array"</span>,</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        categoryarray<span class="op">=</span>sorted_employment_types.tolist() </span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    yaxis<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>            text<span class="op">=</span><span class="st">"Salary (1000 $)"</span>,</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>            font<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">14</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>)  </span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        tickvals<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">50000</span>, <span class="dv">100000</span>, <span class="dv">150000</span>, <span class="dv">200000</span>, <span class="dv">250000</span>, <span class="dv">300000</span>, <span class="dv">350000</span>, <span class="dv">400000</span>, <span class="dv">450000</span>, <span class="dv">500000</span>],</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        ticktext<span class="op">=</span>[<span class="st">"0"</span>, <span class="st">"50k"</span>, <span class="st">"100k"</span>, <span class="st">"150k"</span>, <span class="st">"200k"</span>, <span class="st">"250k"</span>, <span class="st">"300k"</span>, <span class="st">"350k"</span>, <span class="st">"400k"</span>, <span class="st">"450k"</span>, <span class="st">"500k"</span>],</span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        tickfont<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">12</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>), </span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        showline<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        linecolor<span class="op">=</span><span class="st">"black"</span>,</span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>        linewidth<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>        mirror<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>        showgrid<span class="op">=</span><span class="va">True</span>,          </span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>        gridcolor<span class="op">=</span><span class="st">"lightgray"</span>, </span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>        gridwidth<span class="op">=</span><span class="fl">0.5</span>             </span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="bu">dict</span>(family<span class="op">=</span><span class="st">"Arial"</span>, size<span class="op">=</span><span class="dv">16</span>, color<span class="op">=</span><span class="st">"black"</span>),</span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    boxgap<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    plot_bgcolor<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    paper_bgcolor<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    showlegend<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">850</span>,</span>
-<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"./output/Q1.html"</span>)</span>
-<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>fig.write_image(<span class="st">"./output/Q1.png"</span>, width <span class="op">=</span> <span class="dv">850</span>, height <span class="op">=</span> <span class="dv">500</span>, scale<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    xaxis<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>            text<span class="op">=</span><span class="st">"Employment Type"</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>            font<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">14</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>)  </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        tickangle<span class="op">=-</span><span class="dv">45</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        tickfont<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">12</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>),    </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        categoryorder<span class="op">=</span><span class="st">"array"</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        categoryarray<span class="op">=</span>sorted_employment_types.tolist() </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    yaxis<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>            text<span class="op">=</span><span class="st">"Salary (1000 $)"</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>            font<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">14</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>)  </span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        tickvals<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">50000</span>, <span class="dv">100000</span>, <span class="dv">150000</span>, <span class="dv">200000</span>, <span class="dv">250000</span>, <span class="dv">300000</span>, <span class="dv">350000</span>, <span class="dv">400000</span>, <span class="dv">450000</span>, <span class="dv">500000</span>],</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        ticktext<span class="op">=</span>[<span class="st">"0"</span>, <span class="st">"50k"</span>, <span class="st">"100k"</span>, <span class="st">"150k"</span>, <span class="st">"200k"</span>, <span class="st">"250k"</span>, <span class="st">"300k"</span>, <span class="st">"350k"</span>, <span class="st">"400k"</span>, <span class="st">"450k"</span>, <span class="st">"500k"</span>],</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        tickfont<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">12</span>, family<span class="op">=</span><span class="st">"Arial Black"</span>, color<span class="op">=</span><span class="st">"black"</span>),              </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="bu">dict</span>(family<span class="op">=</span><span class="st">"Arial"</span>, size<span class="op">=</span><span class="dv">16</span>, color<span class="op">=</span><span class="st">"black"</span>),</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    boxgap<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    showlegend<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">850</span>,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"./output/Q1.html"</span>)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>fig.write_image(<span class="st">"./output/Q1.png"</span>, width <span class="op">=</span> <span class="dv">850</span>, height <span class="op">=</span> <span class="dv">500</span>, scale<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="./output/Q1.png" class="img-fluid"></p>
 <section id="interpretation" class="level3" data-number="3.1.1">
@@ -507,6 +487,46 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <li>In contrast, part-time employees indicates lower and more consistent salary ranges, with occasional high outliers</li>
 </ul>
 </section>
+</section>
+<section id="salary-distribution-by-industry" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="salary-distribution-by-industry"><span class="header-section-number">3.2</span> Salary Distribution by Industry</h2>
+<div id="51b41b5f" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter dataset: remove missing or zero salaries</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>).toPandas()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create box plot</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    pdf,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"NAICS2_NAME"</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"SALARY"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Salary Distribution by Industry"</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>     color_discrete_sequence<span class="op">=</span>[<span class="st">"#CC0000"</span>],  </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    points<span class="op">=</span><span class="st">"outliers"</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Customize layout</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    font_family<span class="op">=</span><span class="st">"Arial"</span>,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    title_font_size<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="st">"NAICS2_NAME"</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"Salary"</span>,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    xaxis_tickangle<span class="op">=</span><span class="dv">45</span>,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Save outputs</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"./output/Q2.html"</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>fig.write_image(<span class="st">"./output/Q2.png"</span>, width<span class="op">=</span><span class="dv">1000</span>, height<span class="op">=</span><span class="dv">600</span>, scale<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 7:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+</div>
+</div>
+<p><img src="./output/Q2.png" class="img-fluid"></p>
 </section>
 </section>
 

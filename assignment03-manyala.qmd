@@ -151,30 +151,28 @@ print("Data cleaning complete. Rows retained:", len(pdf_selected))
 ## Salary Distribution by Employment Type
 ```{python}
 
-df_query1 = df.select(
+pdf = df.select(
     "EMPLOYMENT_TYPE_NAME",
     "NAICS2_NAME",
     "SALARY"
-)
+).toPandas()
 
-pdf_query1 = df_query1.toPandas()
 
-pdf_query1 = pdf_query1[pdf_query1["SALARY"] > 0]
+pdf = pdf[pdf["SALARY"] > 0]
 
-pdf_query1["EMPLOYMENT_TYPE_NAME"] = (
-    pdf_query1["EMPLOYMENT_TYPE_NAME"]
+pdf["EMPLOYMENT_TYPE_NAME"] = (
+    pdf["EMPLOYMENT_TYPE_NAME"]
     .astype(str) 
     .apply(lambda x: re.sub(r"[^\x00-\x7F]+", "", x)) 
     .str.strip()  
 )
-#pdf_query1 = pdf_query1[pdf_query1["EMPLOYMENT_TYPE_NAME"] != "None"]
 
-median_salaries = pdf_query1.groupby("EMPLOYMENT_TYPE_NAME")["SALARY"].median()
+median_salaries = pdf.groupby("EMPLOYMENT_TYPE_NAME")["SALARY"].median()
 
 sorted_employment_types = median_salaries.sort_values(ascending=False).index
 
-pdf_query1["EMPLOYMENT_TYPE_NAME"] = pd.Categorical(
-    pdf_query1["EMPLOYMENT_TYPE_NAME"],
+pdf["EMPLOYMENT_TYPE_NAME"] = pd.Categorical(
+    pdf["EMPLOYMENT_TYPE_NAME"],
     categories=sorted_employment_types,
     ordered=True
 )
@@ -184,7 +182,7 @@ pdf_query1["EMPLOYMENT_TYPE_NAME"] = pd.Categorical(
 ```{python}
 
 fig = px.box(
-    pdf_query1,
+    pdf,
     x="EMPLOYMENT_TYPE_NAME",
     y="SALARY",
     title="Salary Distribution by Employment Type",
@@ -195,23 +193,13 @@ fig = px.box(
 
 
 fig.update_layout(
-    title=dict(
-        text="Salary Distribution by Employment Type",
-        font=dict(size=20, family="Arial Black", color="black"),  
-        x=0.5  
-    ),
     xaxis=dict(
         title=dict(
             text="Employment Type",
             font=dict(size=14, family="Arial Black", color="black")  
         ),
         tickangle=-45,
-        tickfont=dict(size=12, family="Arial Black", color="black"),  
-        showline=True,
-        linecolor="black",
-        linewidth=2,
-        mirror=True,
-        showgrid=False,  
+        tickfont=dict(size=12, family="Arial Black", color="black"),    
         categoryorder="array",
         categoryarray=sorted_employment_types.tolist() 
     ),
@@ -222,19 +210,10 @@ fig.update_layout(
         ),
         tickvals=[0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000],
         ticktext=["0", "50k", "100k", "150k", "200k", "250k", "300k", "350k", "400k", "450k", "500k"],
-        tickfont=dict(size=12, family="Arial Black", color="black"), 
-        showline=True,
-        linecolor="black",
-        linewidth=2,
-        mirror=True,
-        showgrid=True,          
-        gridcolor="lightgray", 
-        gridwidth=0.5             
+        tickfont=dict(size=12, family="Arial Black", color="black"),              
     ),
     font=dict(family="Arial", size=16, color="black"),
-    boxgap=0.7,
-    plot_bgcolor="white",
-    paper_bgcolor="white",
+    boxgap=0.3,
     showlegend=False,
     height=500,
     width=850,
@@ -253,4 +232,46 @@ fig.write_image("./output/Q1.png", width = 850, height = 500, scale=1)
 * The boxplot indicates that full-time employees (>32 hours) receive higher median salaries with greater variability.
 * In contrast, part-time employees indicates lower and more consistent salary ranges, with occasional high outliers
 
+## Salary Distribution by Industry
+
+```{python}
+
+# Filter dataset: remove missing or zero salaries
+pdf = df.select(
+    "NAICS2_NAME",
+    "SALARY"
+).toPandas()
+
+
+# Create box plot
+fig = px.box(
+    pdf,
+    x="NAICS2_NAME",
+    y="SALARY",
+    title="Salary Distribution by Industry",
+    color_discrete_sequence=["#CC0000"],  
+    points="outliers"
+)
+
+# Customize layout
+fig.update_layout(
+    height=500,
+    font_family="Arial",
+    title_font_size=16,
+    xaxis_title="NAICS2_NAME",
+    yaxis_title="Salary",
+    xaxis_tickangle=45,
+    
+)
+
+# Save outputs
+fig.write_html("./output/Q2.html")
+fig.write_image("./output/Q2.png", width=1000, height=600, scale=1)
+
+
+```
+
+![](./output/Q2.png)
+
+### Interpretation
 
