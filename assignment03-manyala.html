@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="import-dataset" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Import Dataset</h1>
-<div id="d81a02d0" class="cell" data-execution_count="1">
+<div id="3ae9e8b8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
@@ -171,12 +171,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    .csv(<span class="st">"lightcast_job_postings.csv"</span>)</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#df.show(5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>df.createOrReplaceTempView(<span class="st">"job_postings"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#df.show(5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/24 03:01:35 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[Stage 0:===========================================================(1 + 0) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+25/09/24 04:23:28 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 04:23:42 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
 </div>
 </div>
 </section>
@@ -184,7 +185,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="2"><span class="header-section-number">2</span> Casting salary and experience columns</h1>
 <section id="computing-medians-and-imputing-missing-salaries" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="computing-medians-and-imputing-missing-salaries"><span class="header-section-number">2.1</span> Computing medians and Imputing missing salaries</h2>
-<div id="1b35ab27" class="cell" data-execution_count="2">
+<div id="27772be1" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>)) <span class="op">\</span></span>
@@ -309,7 +310,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <section id="cleaning-education-column-and-exporting-cleaned-data" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="cleaning-education-column-and-exporting-cleaned-data"><span class="header-section-number">2.2</span> Cleaning Education column and Exporting Cleaned Data</h2>
 <p>*I referred to Claude Sonnet 4 for prompts and sample code ideas, but I wrote and adapted the final implementation myself</p>
-<div id="487e67a1" class="cell" data-execution_count="3">
+<div id="e16d88bf" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To remove \n and \r</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>] <span class="op">=</span> (</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>]</span>
@@ -390,7 +391,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="exporting-cleaned-data" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="exporting-cleaned-data"><span class="header-section-number">2.3</span> Exporting Cleaned Data</h2>
-<div id="4f1bc940" class="cell" data-execution_count="4">
+<div id="d20a066d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data cleaning complete. Rows retained:"</span>, <span class="bu">len</span>(pdf_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data cleaning complete. Rows retained: 72498</code></pre>
@@ -402,7 +403,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="3"><span class="header-section-number">3</span> Query 1: Salary Distribution by Industry and Employment Type</h1>
 <section id="salary-distribution-by-employment-type" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="salary-distribution-by-employment-type"><span class="header-section-number">3.1</span> Salary Distribution by Employment Type</h2>
-<div id="df3315f8" class="cell" data-execution_count="5">
+<div id="55ff497d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_query1 <span class="op">=</span> df.select(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
@@ -419,7 +420,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> x: re.sub(<span class="vs">r"[^\x00-\x7F]+"</span>, <span class="st">""</span>, x)) </span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.strip()  </span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>pdf_query1 <span class="op">=</span> pdf_query1[pdf_query1[<span class="st">"EMPLOYMENT_TYPE_NAME"</span>] <span class="op">!=</span> <span class="st">"None"</span>]</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#pdf_query1 = pdf_query1[pdf_query1["EMPLOYMENT_TYPE_NAME"] != "None"]</span></span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>median_salaries <span class="op">=</span> pdf_query1.groupby(<span class="st">"EMPLOYMENT_TYPE_NAME"</span>)[<span class="st">"SALARY"</span>].median()</span>
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
@@ -434,7 +435,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <pre><code>[Stage 6:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
-<div id="d95bec2b" class="cell" data-execution_count="6">
+<div id="deb36e09" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pdf_query1,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
@@ -492,13 +493,20 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">850</span>,</span>
 <span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the figure</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"./output/Q1.html"</span>)</span>
 <span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>fig.write_image(<span class="st">"./output/Q1.png"</span>, width <span class="op">=</span> <span class="dv">850</span>, height <span class="op">=</span> <span class="dv">500</span>, scale<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="./output/Q1.png" class="img-fluid"></p>
+<section id="interpretation" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="interpretation"><span class="header-section-number">3.1.1</span> Interpretation</h3>
+<ul>
+<li>The boxplot indicates that full-time employees (&gt;32 hours) receive higher median salaries with greater variability.</li>
+<li>In contrast, part-time employees indicates lower and more consistent salary ranges, with occasional high outliers</li>
+</ul>
+</section>
 </section>
 </section>
 

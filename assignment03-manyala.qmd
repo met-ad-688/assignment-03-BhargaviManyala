@@ -63,6 +63,7 @@ df = (
     .csv("lightcast_job_postings.csv")
 )
 
+df.createOrReplaceTempView("job_postings")
 #df.show(5)
 
 
@@ -166,7 +167,7 @@ pdf_query1["EMPLOYMENT_TYPE_NAME"] = (
     .apply(lambda x: re.sub(r"[^\x00-\x7F]+", "", x)) 
     .str.strip()  
 )
-pdf_query1 = pdf_query1[pdf_query1["EMPLOYMENT_TYPE_NAME"] != "None"]
+#pdf_query1 = pdf_query1[pdf_query1["EMPLOYMENT_TYPE_NAME"] != "None"]
 
 median_salaries = pdf_query1.groupby("EMPLOYMENT_TYPE_NAME")["SALARY"].median()
 
@@ -239,7 +240,7 @@ fig.update_layout(
     width=850,
 )
 
-# Show the figure
+
 
 
 fig.write_html("./output/Q1.html")
@@ -247,5 +248,9 @@ fig.write_image("./output/Q1.png", width = 850, height = 500, scale=1)
 ```
 
 ![](./output/Q1.png)
+
+### Interpretation
+* The boxplot indicates that full-time employees (>32 hours) receive higher median salaries with greater variability.
+* In contrast, part-time employees indicates lower and more consistent salary ranges, with occasional high outliers
 
 
