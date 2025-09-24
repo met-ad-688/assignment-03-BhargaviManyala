@@ -14,6 +14,11 @@ format:
     theme: cerulean
     toc: true
     toc-depth: 2
+ 
+  pdf:
+    documentclass: article
+    papersize: a4
+    geometry: margin=1in
 date-modified: today
 date-format: long
 jupyter: assignment03-venv
@@ -65,7 +70,10 @@ salary_median = df.approxQuantile("SALARY", [0.5], 0.01)[0]
 * Common practice: Standard approach in data preprocessing for salary data
 
 ::: {.callout}
-In my dataset, the column EDUCATION_LEVELS_NAME contains unwanted characters like \n and \r (for example: [\n "Bachelor's degree"\n]). How can I remove these characters so that the column values look clean (e.g., "Bachelor's degree") using PySpark or Pandas?
+::: {.callout}
+In my dataset, the column EDUCATION_LEVELS_NAME contains unwanted characters like `\n` and `\r` (for example: [`\n "Bachelor's degree"\n`]). How can I remove these characters so that the column values look clean (e.g., "Bachelor's degree") using PySpark or Pandas?
+:::
+
 :::
 
 * PySpark Solution
