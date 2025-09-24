@@ -431,3 +431,31 @@ fig.write_image("./output/Q4.png", width=900, height=800, scale=1)
 
 ```{python}
 
+
+df = df.withColumn(
+    "REMOTE_GROUP",
+    when(col("REMOTE_TYPE_NAME").rlike("(?i)Remote"), "Remote")
+    .when(col("REMOTE_TYPE_NAME").rlike("(?i)Hybrid"), "Hybrid")
+    .otherwise("Onsite")
+)
+
+df = df.withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast("float"))
+df = df.withColumn("Average_Salary", col("Average_Salary").cast("float"))
+
+df = df.filter(
+    col("MAX_YEARS_EXPERIENCE").isNotNull() &
+    (col("MAX_YEARS_EXPERIENCE") > 0) &
+    col("Average_Salary").isNotNull() &
+    (col("Average_Salary") > 0)
+)
+
+df_selected = df.select(
+    col("MAX_YEARS_EXPERIENCE").alias("MAX_EXPERIENCE"),
+    col("Average_Salary").alias("AVERAGE_SALARY"),
+    col("REMOTE_GROUP"),
+    col("LOT_V6_SPECIALIZED_OCCUPATION_NAME").alias("OCCUPATION_NAME")
+)
+
+df_pd = df_selected.toPandas()
+df_pd.head()
+```
