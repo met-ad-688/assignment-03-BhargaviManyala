@@ -417,7 +417,7 @@ fig.update_layout(
 )
 
 fig.write_html("./output/Q4.html")
-fig.write_image("./output/Q4.png", width=900, height=800, scale=1)
+fig.write_image("./output/Q4.png", width=900, height=600, scale=1)
 
 ```
 
