@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="import-dataset" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Import Dataset</h1>
-<div id="c1311326" class="cell" data-execution_count="1">
+<div id="bd6d4eb3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
@@ -189,8 +189,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/24 08:40:46 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 08:41:01 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
+25/09/24 17:38:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                25/09/24 17:38:34 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.</code></pre>
 </div>
 </div>
 </section>
@@ -198,7 +198,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="2"><span class="header-section-number">2</span> Casting salary and experience columns</h1>
 <section id="computing-medians-and-imputing-missing-salaries" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="computing-medians-and-imputing-missing-salaries"><span class="header-section-number">2.1</span> Computing medians and Imputing missing salaries</h2>
-<div id="11d1b3c9" class="cell" data-execution_count="2">
+<div id="965c85f6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY"</span>, col(<span class="st">"SALARY"</span>).cast(<span class="st">"float"</span>)) <span class="op">\</span></span>
@@ -323,7 +323,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <section id="cleaning-education-column-and-exporting-cleaned-data" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="cleaning-education-column-and-exporting-cleaned-data"><span class="header-section-number">2.2</span> Cleaning Education column and Exporting Cleaned Data</h2>
 <p>*I referred to Claude Sonnet 4 for prompts and sample code ideas, but I wrote and adapted the final implementation myself</p>
-<div id="a64df8c0" class="cell" data-execution_count="3">
+<div id="040c22a0" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To remove \n and \r</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>] <span class="op">=</span> (</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    pdf_selected[<span class="st">"EDUCATION_LEVELS_NAME"</span>]</span>
@@ -404,7 +404,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="exporting-cleaned-data" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="exporting-cleaned-data"><span class="header-section-number">2.3</span> Exporting Cleaned Data</h2>
-<div id="0248e258" class="cell" data-execution_count="4">
+<div id="08d47e5e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data cleaning complete. Rows retained:"</span>, <span class="bu">len</span>(pdf_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data cleaning complete. Rows retained: 72498</code></pre>
@@ -416,7 +416,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <h1 data-number="3"><span class="header-section-number">3</span> Salary Distribution by Industry and Employment Type</h1>
 <section id="salary-distribution-by-employment-type" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="salary-distribution-by-employment-type"><span class="header-section-number">3.1</span> Salary Distribution by Employment Type</h2>
-<div id="59f31d73" class="cell" data-execution_count="5">
+<div id="7c8982a8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
@@ -446,7 +446,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <pre><code>[Stage 6:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
-<div id="9c0ab301" class="cell" data-execution_count="6">
+<div id="09f06c76" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pdf,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"EMPLOYMENT_TYPE_NAME"</span>,</span>
@@ -502,7 +502,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-distribution-by-industry" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="salary-distribution-by-industry"><span class="header-section-number">3.2</span> Salary Distribution by Industry</h2>
-<div id="b92289d7" class="cell" data-execution_count="7">
+<div id="5e73c4c2" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> df.select(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SALARY"</span></span>
@@ -541,7 +541,8 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <section id="interpretation-1" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="interpretation-1"><span class="header-section-number">3.2.1</span> Interpretation</h3>
 <ul>
-<li>The boxplot indicates that salary levels differ across industries, with Information, Finance, and Professional Services showing higher median salaries. *Education and Public Admiration have lower median salaries with narrower ranges.</li>
+<li>The boxplot indicates that salary levels differ across industries, with Information, Finance, and Professional Services showing higher median salaries.</li>
+<li>Education and Public Admiration have lower median salaries with narrower ranges.</li>
 <li>Most industries center around $100k, though some display wider variation and notable outliers.</li>
 </ul>
 </section>
@@ -549,7 +550,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-analysis-by-onet-occupation-type-bubble-chart" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Salary Analysis by ONET Occupation Type (Bubble Chart)</h1>
-<div id="aa0c270d" class="cell" data-execution_count="8">
+<div id="b82dcd7b" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>salary_analysis <span class="op">=</span> spark.sql(<span class="st">"""</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">    LOT_OCCUPATION_NAME AS Occupation_Name,</span></span>
@@ -616,7 +617,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="1fe5eb0e" class="cell" data-execution_count="9">
+<div id="baa04a11" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>   salary_pd,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>   x<span class="op">=</span><span class="st">"Occupation_Name"</span>,</span>
@@ -669,7 +670,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-by-education-level" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Salary by Education Level</h1>
-<div id="ea38a939" class="cell" data-execution_count="10">
+<div id="36f4364e" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(</span>
@@ -760,7 +761,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="89d4b824" class="cell" data-execution_count="11">
+<div id="fd86ec2b" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_pd[<span class="st">"MAX_EXPERIENCE_JITTER"</span>] <span class="op">=</span> (</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    df_pd[<span class="st">"MAX_EXPERIENCE"</span>] <span class="op">+</span> np.random.uniform(<span class="op">-</span><span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="bu">len</span>(df_pd))</span>
@@ -805,7 +806,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </section>
 <section id="salary-by-remote-work-type" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Salary by Remote Work Type</h1>
-<div id="122a1cc9" class="cell" data-execution_count="12">
+<div id="a87b4561" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when, lower, trim</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(</span>
@@ -893,7 +894,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="36616e1d" class="cell" data-execution_count="13">
+<div id="31efe50d" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>order     <span class="op">=</span> [<span class="st">"Onsite"</span>, <span class="st">"Remote"</span>, <span class="st">"Hybrid"</span>]</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>color_map <span class="op">=</span> {<span class="st">"Onsite"</span>:<span class="st">"#2a9d8f"</span>, <span class="st">"Remote"</span>:<span class="st">"#e76f51"</span>, <span class="st">"Hybrid"</span>:<span class="st">"#264653"</span>}  </span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>

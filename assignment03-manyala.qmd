@@ -275,7 +275,7 @@ fig.write_image("./output/Q2.png", width=1000, height=600, scale=1)
 
 ### Interpretation
 * The boxplot indicates that salary levels differ across industries, with Information, Finance, and Professional Services showing higher median salaries.
-*Education and Public Admiration have lower median salaries with narrower ranges.
+* Education and Public Admiration have lower median salaries with narrower ranges.
 * Most industries center around $100k, though some display wider variation and notable outliers.
 
 # Salary Analysis by ONET Occupation Type (Bubble Chart)
